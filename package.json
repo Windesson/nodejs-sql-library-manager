@@ -1,0 +1,30 @@
+{
+  "name": "sql_library_manager",
+  "version": "1.0.0",
+  "description": "A SQL Library manager",
+  "scripts": {
+    "start": "nodemon ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Windesson/nodejs-sql-library-manager.git"
+  },
+  "author": "Windesson Almeida",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Windesson/nodejs-sql-library-manager/issues"
+  },
+  "homepage": "https://github.com/Windesson/nodejs-sql-library-manager#readme",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "pug": "^2.0.4",
+    "sequelize": "^5.21.3",
+    "sequelize-cli": "^5.5.1",
+    "sqlite3": "^4.1.1"
+  }
+}
