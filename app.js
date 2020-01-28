@@ -23,10 +23,14 @@ app.use('/books', books);
 
 // catch 404 and forward to error handler
 app.use( (req, res, next) => {
-    res.status(404).render('notFound');
+    res.status(404).render('page-not-found');
 });
 
-// error handler
+/**
+ * custom error handler middleware function 
+ * that logs the error to the console and renders an 
+ * “Error” view with a friendly message for the user.
+ */
 app.use( (err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
