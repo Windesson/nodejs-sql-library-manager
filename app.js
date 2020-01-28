@@ -1,4 +1,3 @@
-const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -24,7 +23,7 @@ app.use('/books', books);
 
 // catch 404 and forward to error handler
 app.use( (req, res, next) => {
-  next(createError(404));
+    res.status(404).render('notFound');
 });
 
 // error handler

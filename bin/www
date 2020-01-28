@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 
 /**
+ *  File credit to "Using Sequelize ORM With Express" by Guil Hernandez
+ *  https://teamtreehouse.com/library/using-sequelize-orm-with-express
+ */
+
+/**
  * Module dependencies.
  */
 var app = require('../app');
