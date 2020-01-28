@@ -8,9 +8,8 @@ function asyncHandler(cb){
     try {
       await cb(req, res, next)
     } catch(error){
-      if(error.message == 404) 
-        res.status(404).render('notFound');
       res.status(500).send(error);
+      return;
     }
   }
 }
@@ -31,7 +30,7 @@ router.post('/new', asyncHandler(async (req, res) => {
     let book;
     try {
       book = await Book.create(req.body);
-      res.redirect("/books/" + book.id);
+      res.redirect("/books/"); //redirect to the books listing page.
     } catch (error) {
       if(error.name === "SequelizeValidationError") { // checking the error
         book = await Book.build(req.body);
@@ -48,7 +47,7 @@ router.get('/:id', asyncHandler(async(req, res) => {
     if(book) {
       res.render("books/edit", { book, title: "Update Book" });      
     } else {
-      throw new Error("404");
+      res.status(404).render('notFound');
     }
 }));
 
@@ -59,9 +58,9 @@ router.post('/:id', asyncHandler(async (req, res, next) => {
       book = await Book.findByPk(req.params.id);
       if(book) {
         await book.update(req.body);
-        res.redirect("/books/" + book.id); 
+        res.redirect("/books/"); //redirect to the books listing page.
       } else {
-        throw new Error("404");
+        res.status(404).render('notFound');
       }
     } catch (error) {
       if(error.name === "SequelizeValidationError") {
@@ -81,7 +80,7 @@ router.post('/:id/delete', asyncHandler(async (req ,res) => {
       await book.destroy();
       res.redirect("/books");
     } else {
-      throw new Error("404");
+        res.status(404).render('notFound');
     }
 }));
 
