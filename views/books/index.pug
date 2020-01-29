@@ -2,6 +2,11 @@ extends ../layout
 
 block content
   h1 Books
+
+  form(action="/books/", method="get", class="search-form")
+    input(type="text", name="search", placeholder="feeling lucky", value=`${search? search : ''}`) 
+    button(type="submit", class="search-button") search 
+
   p
    a(href="/books/new", class="button") Create New Book
 

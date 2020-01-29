@@ -1,12 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const Book = require('../models').Book;
-
+const db = require('../models');
+const Book = db.Book;
+const { Op } = db.Sequelize;
 
 /* GET books listing. */
 router.get('/', async (req, res, next) => {
-    const books = await Book.findAll({order:[ ["title", 'ASC'] ] });
-    res.render("books/index", { books, title: "Books"});
+    const {search} = req.query;
+    let books;
+    if(search)
+      books = await Book.findAll({
+        order:[ ["title", 'ASC'] ],
+        where:{
+          [Op.or]: [
+             {title:  {[Op.substring]: search}},
+             {author: {[Op.substring]: search}},
+             {genre:  {[Op.substring]: search}},
+             {year: search}
+            ]
+      }});
+    else
+      books = await Book.findAll({order:[ ["title", 'ASC'] ] });
+
+    res.render("books/index", { books, title: "Books", search});
 });
 
 /* Create a new Book form. */
