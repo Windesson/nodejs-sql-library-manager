@@ -1,27 +1,36 @@
 extends ../layout
 
 block content
-  h1 Books
 
-  form(action="/books/", method="get", class="search-form")
-    input(type="text", name="search", placeholder="feeling lucky", value=`${search? search : ''}`) 
+  form(action="/books/search", method="get", class="search-form")
+    input(type="text", name="q", placeholder="feeling lucky", value=`${q? q : ''}`) 
     button(type="submit", class="search-button") search 
-
+  
+  h1 Books
   p
    a(href="/books/new", class="button") Create New Book
-
-  table
-    thead
-      tr
-       th Title
-       th Author
-       th Genre
-       th Year
-    tbody
-      each book in books
+  
+  if books.length > 0
+    table
+      thead
         tr
-          td 
-            a(href=`/books/${book.id}`)= book.title
-          td= book.author
-          td= book.genre
-          td= book.year
+         th Title
+         th Author
+         th Genre
+         th Year
+      tbody
+        each book in books
+          tr
+            td 
+              a(href=`/books/${book.id}`)= book.title
+            td= book.author
+            td= book.genre
+            td= book.year
+    if pages && pages.length > 1
+      .pagination
+        ul
+          each page in pages
+            li 
+              a(href=`/books/search?q=${q}&start=${page.start}`, class=`${page.isActive? 'active' : ''}`)= page.label
+  else
+    p no search results returned...

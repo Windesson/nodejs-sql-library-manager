@@ -4,25 +4,46 @@ const db = require('../models');
 const Book = db.Book;
 const { Op } = db.Sequelize;
 
-/* GET books listing. */
-router.get('/', async (req, res, next) => {
-    const {search} = req.query;
-    let books;
-    if(search)
-      books = await Book.findAll({
-        order:[ ["title", 'ASC'] ],
-        where:{
-          [Op.or]: [
-             {title:  {[Op.substring]: search}},
-             {author: {[Op.substring]: search}},
-             {genre:  {[Op.substring]: search}},
-             {year: search}
-            ]
-      }});
-    else
-      books = await Book.findAll({order:[ ["title", 'ASC'] ] });
+const MAXITEMSPERPAGE = 5;
 
-    res.render("books/index", { books, title: "Books", search});
+function getPages(count,offset){
+  const totalpages =  (count * 1.0)/MAXITEMSPERPAGE;
+  let pages = [];
+  for (var i = 0; i < totalpages; i++){
+      let start = i * MAXITEMSPERPAGE;
+      let isActive = offset/MAXITEMSPERPAGE == i;
+      pages.push( { start, label: i, isActive });
+  }
+  return pages;
+}
+
+/* GET matching books listing. */
+router.get(['/','/search'], async (req, res, next) => {
+  const q = req.query.q? req.query.q : '' ;
+  const offset = req.query.start? req.query.start : 0;
+
+  let totalCount;
+  let books;
+  await Book.findAndCountAll({
+    limit: MAXITEMSPERPAGE,
+    offset: offset,
+    order:[ ["title", 'ASC'] ],
+    where:{
+      [Op.or]: [
+           {title:  {[Op.substring]: q}},
+           {author: {[Op.substring]: q}},
+           {genre:  {[Op.substring]: q}},
+           {year: q}
+          ]
+    }}).then(function(result) {
+      totalCount = result.count;
+      books = result.rows;
+    });
+  
+  const pages = getPages(totalCount, offset);
+
+  res.render("books/index", { books, title: "Books", q, pages});
+
 });
 
 /* Create a new Book form. */
